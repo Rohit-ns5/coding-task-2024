@@ -10,14 +10,42 @@
     [contact]="activeContact$ | async"
 ></app-contact-detail> -->
 
+<!-- Loading message -->
+<div *ngIf="isLoading" class="loading-message">
+  <p>Loading contacts, please wait...</p>
+</div>
 
-<div *ngFor="let contact of contactList$ | async" class="contact-list-item">
-    <h3>{{ contact.firstName }} {{ contact.lastName }}</h3>
-    <div class="contact-actions">
-      <button type="button" class="btn-primary" (click)="viewContactClicked(contact.id)">View Details</button>
-      <button type="button" class="btn-secondary" (click)="editContactClicked(contact)">Edit Contact</button>
-    </div>
-  </div>
-  
+<ng-template #noContactsTemplate>
+  <!-- Message when no contacts are available -->
+  <p>No contacts available.</p>
+</ng-template>
+
+<!-- Display contacts when not loading -->
+<ng-container *ngIf="!isLoading">
+  <ng-container *ngIf="(contactList$ | async) as contactList">
+    
+    <!-- Add Contact button -->
+    <button type="button" class="btn-primary add-contact-button" (click)="addContactClicked()">
+      Add Contact
+    </button>
+
+    <!-- Contacts list -->
+    <ng-container *ngIf="contactList.length > 0; else noContactsTemplate">
+      <div *ngFor="let contact of contactList" class="contact-list-item">
+        <h3>{{ contact.firstName }} {{ contact.lastName }}</h3>
+        <div class="contact-actions">
+          <button type="button" class="btn-primary" (click)="viewContactClicked(contact.id)">View Details</button>
+          <button type="button" class="btn-secondary" (click)="editContactClicked(contact)">Edit Contact</button>
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+<!-- Contact Detail Component -->
 <app-contact-detail [contact]="activeContact$ | async"></app-contact-detail>
+
+
+
+
   

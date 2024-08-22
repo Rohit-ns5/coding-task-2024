@@ -26,7 +26,34 @@ In our main code base, you would expect to find this architecture replicated wit
 
 # Answers
 
-1. //Optionally provide any notes relating to question 1 here.
-2. //Optionally provide any notes relating to question 2 here.
-3. //Provide your answer to question 3 here.
-4. //Provide your link or location of your file within the repo here.
+1. Optionally provide any notes relating to question 1 here.
+
+*    I have added an isLoading property to track the loading state. When the component starts fetching data, isLoading is set to true. Once the data is loaded, isLoading is set to false. In the component template, I use *ngIf to display the loading message while isLoading is true and hide it when isLoading is false.
+
+2. Optionally provide any notes relating to question 2 here.
+
+*    I have introduced an "Add Contact" button that triggers the same dialog used for editing contacts.  
+    - Modified the Component class to Handle the Button Click.  
+    - Added an action for Add Contact button.  
+    - Updated the effect to include the functionality for adding a contact by modifying the existing launchEditDialog$ and saveContact$ effects.  
+    And in the component template, we now reuse the same contact list rendering logic to show the updated list.
+
+3. Provide your answer to question 3 here.  
+*   We can use the catchError method of rxjs/operator to handle the errors recieved from the service functions.
+    ``` typescript
+        retrieveContactList$ = createEffect(()=> this.actions$.pipe(
+            ofType(actions.appStarted),
+            concatMap(() => 
+                this.contactService.getContactList$().pipe(
+                    map(contactList => actions.contactListReturned({contactList})),
+                    catchError(error => {
+                        console.error('Error fetching contact list', error);
+                        //action to handle the error
+                    })
+                )
+            )
+        ))
+    ```
+        
+4. Provide your link or location of your file within the repo here.  
+*   src/managingRoles.pdf
